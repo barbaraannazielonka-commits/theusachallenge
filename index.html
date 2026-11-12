@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>USA Challenge C1–C2</title>
+<style>
+:root{--bg:#f6f4ef;--card:#fff;--ink:#1b2333;--mut:#5b6475;--pri:#1f3a8a;--acc:#b91c3c;--ok:#15803d;--okbg:#dcfce7;--bad:#b91c1c;--badbg:#fee2e2;--bd:#d9d5ca;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10141f;--card:#1a2030;--ink:#eef1f7;--mut:#a3adc2;--pri:#8fa8ff;--acc:#ff7d96;--ok:#6ee7a0;--okbg:#12361f;--bad:#fca5a5;--badbg:#401818;--bd:#2d3650;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10141f;--card:#1a2030;--ink:#eef1f7;--mut:#a3adc2;--pri:#8fa8ff;--acc:#ff7d96;--ok:#6ee7a0;--okbg:#12361f;--bad:#fca5a5;--badbg:#401818;--bd:#2d3650;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:1.0625rem/1.55 Georgia,"Times New Roman",serif}
+header{background:linear-gradient(90deg,#1f3a8a,#b91c3c);color:#fff;padding:18px 16px;text-align:center}
+header h1{margin:0;font-size:1.6rem}header p{margin:4px 0 0;opacity:.9;font-family:system-ui,sans-serif;font-size:.9rem}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--bd);display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 14px;font-family:system-ui,sans-serif;font-size:.9rem}
+.prog{flex:1;height:8px;background:var(--bd);border-radius:6px;overflow:hidden}.prog i{display:block;height:100%;width:0;background:var(--pri);transition:width .3s}
+#timer{font-weight:700;font-variant-numeric:tabular-nums;color:var(--acc)}
+main{max-width:760px;margin:0 auto;padding:18px 14px 30px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:16px}
+h2{margin:.2em 0 .3em;color:var(--pri)}h3{margin:.2em 0}
+.tag{display:inline-block;font:700 .75rem system-ui,sans-serif;background:var(--pri);color:var(--bg);padding:2px 9px;border-radius:99px;letter-spacing:.04em}
+.mut{color:var(--mut);font-family:system-ui,sans-serif;font-size:.92rem}
+button{font:600 .95rem system-ui,sans-serif;cursor:pointer;border-radius:10px;border:1px solid var(--pri);background:var(--pri);color:var(--bg);padding:10px 18px}
+button.sec{background:transparent;color:var(--pri)}button:disabled{opacity:.45;cursor:not-allowed}
+.opt{display:block;width:100%;text-align:left;margin:7px 0;background:var(--bg);color:var(--ink);border:1px solid var(--bd);font-weight:500}
+.opt:hover:not(:disabled){border-color:var(--pri)}.opt.ok{background:var(--okbg);border-color:var(--ok);color:var(--ink)}.opt.bad{background:var(--badbg);border-color:var(--bad);color:var(--ink)}
+.exp{margin:6px 0 0;padding:8px 12px;border-left:4px solid var(--pri);background:var(--bg);font-family:system-ui,sans-serif;font-size:.9rem;display:none}
+.q{padding:12px 0;border-top:1px solid var(--bd)}.q:first-of-type{border-top:0}
+.passage{background:var(--bg);border-left:4px solid var(--acc);padding:12px 14px;border-radius:6px;margin:10px 0}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.tile{min-height:58px;padding:6px;font-size:.85rem;background:var(--bg);color:var(--ink);border:2px solid var(--bd);text-align:center}
+.tile.sel{border-color:var(--pri);background:var(--pri);color:var(--bg)}
+.solved{border-radius:10px;padding:10px;margin:8px 0;font-family:system-ui,sans-serif;background:var(--okbg);border:1px solid var(--ok)}
+textarea{width:100%;min-height:150px;font:inherit;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--ink)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:6px}
+.big{font-size:3rem;font-weight:700;color:var(--pri);text-align:center;margin:6px 0}
+table{width:100%;border-collapse:collapse;font-family:system-ui,sans-serif;font-size:.92rem}td,th{padding:6px 8px;border-bottom:1px solid var(--bd);text-align:left}
+.aa{padding:4px 10px;font-size:.9rem;border-radius:8px}
+footer{text-align:center;padding:18px 12px;border-top:1px solid var(--bd);color:var(--mut);font-family:system-ui,sans-serif;font-size:.9rem}
+@media(max-width:520px){.grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header><h1>🇺🇸 The USA Challenge</h1><p>Geography · Culture · History — C1/C2 extension task · 20 minutes</p></header>
+<div class="bar"><span id="stepLbl">Welcome</span><div class="prog"><i id="pb"></i></div><button class="sec aa" id="aa" title="Change text size">Aa</button><span id="timer">20:00</span></div>
+<main id="app"></main>
+<footer>Nannestad High School – Barbara Anna Zielonka</footer>
+
+<script>
+const $=s=>document.querySelector(s);
+const SECTIONS=[
+{id:'read',name:'Reading',type:'mc',intro:'Read the text carefully, then answer the questions. Watch for nuance and implied meaning.',
+ passage:'Between 1930 and 1940, vast stretches of the Southern Plains were reduced to a wasteland. Years of drought, combined with the aggressive ploughing of native prairie grass, left the topsoil defenceless against the wind. Towering “black blizzards” swept across Oklahoma, Kansas and Texas, burying farms and choking livestock. Roughly 2.5 million people left the region, many bound for California, where they were derided as “Okies” regardless of where they had actually come from. Although the Dust Bowl is commonly blamed on nature’s caprice, historians stress that it was substantially a man-made catastrophe, one that spurred the creation of the Soil Conservation Service in 1935.',
+ qs:[
+ {q:'What is the writer’s main argument about the Dust Bowl?',o:['It was an unavoidable natural disaster.','Human farming practices significantly worsened a drought.','Government policy alone caused it.','It affected only Oklahoma.'],a:1,e:'The text says it was “substantially a man-made catastrophe” – drought plus ploughing up prairie grass.'},
+ {q:'The word “derided” most nearly means…',o:['pitied','mocked','welcomed','ignored'],a:1,e:'To deride is to ridicule or treat with scorn.'},
+ {q:'What can be inferred about the label “Okies”?',o:['It was accurate for all migrants.','It was used as a general, often unfair, stereotype.','It was a term of respect.','It referred only to Californians.'],a:1,e:'“Regardless of where they had actually come from” signals a careless, unfair label.'}]},
+{id:'listen',name:'Listening',type:'mc',listen:true,intro:'Press Play and listen. You may play the recording twice. Take notes, then answer.',
+ passage:'In December 1955, Rosa Parks, a seamstress and secretary of the local NAACP, refused to give up her seat on a bus in Montgomery, Alabama. Contrary to the popular myth, she was not simply tired; she later said she was tired of giving in. Her arrest triggered a boycott of the city’s buses that lasted three hundred and eighty-one days. A young minister named Martin Luther King Junior emerged as its spokesman. In 1956 the Supreme Court ruled that segregation on public buses was unconstitutional, though the struggle for civil rights was far from over.',
+ qs:[
+ {q:'How long did the Montgomery bus boycott last?',o:['181 days','281 days','381 days','481 days'],a:2,e:'Three hundred and eighty-one days.'},
+ {q:'What does the speaker suggest about the “tired” story?',o:['It is completely true.','It oversimplifies her motives.','It was invented by King.','It was in her court testimony.'],a:1,e:'“Contrary to the popular myth… tired of giving in” – her protest was deliberate.'},
+ {q:'What was the outcome in 1956?',o:['Segregation on buses was ruled unconstitutional.','King was arrested.','Civil rights were fully achieved.','Parks was elected mayor.'],a:0,e:'The Supreme Court ruled bus segregation unconstitutional.'}]},
+{id:'odd',name:'Odd One Out',type:'mc',intro:'Three items share a link. Choose the one that does not belong – and think about why.',
+ qs:[
+ {q:'Lexington · Concord · Saratoga · Gettysburg',o:['Lexington','Concord','Saratoga','Gettysburg'],a:3,e:'Gettysburg was a Civil War (1863) battle; the others belong to the Revolutionary War.'},
+ {q:'Jazz · Blues · Bluegrass · Flamenco',o:['Jazz','Blues','Bluegrass','Flamenco'],a:3,e:'Flamenco is Spanish; the others are American musical genres.'},
+ {q:'Texas · Florida · California · Puerto Rico',o:['Texas','Florida','California','Puerto Rico'],a:3,e:'Puerto Rico is a US territory, not a state.'},
+ {q:'Yellowstone · Yosemite · Everglades · Niagara Falls',o:['Yellowstone','Yosemite','Everglades','Niagara Falls'],a:3,e:'Niagara Falls is a state park; the others are national parks.'},
+ {q:'🏛 Politics: Executive order · Veto · Pardon · Filibuster',o:['Executive order','Veto','Pardon','Filibuster'],a:3,e:'The first three are presidential powers; the filibuster is a Senate tactic used to delay or block a vote.'},
+ {q:'🏛 Politics: Washington, D.C. · Capitol Hill · White House · Wall Street',o:['Washington, D.C.','Capitol Hill','White House','Wall Street'],a:3,e:'Wall Street is New York’s financial district; the others are centres of federal government.'},
+ {q:'🏛 Politics: Bill Clinton · Barack Obama · Joe Biden · George W. Bush',o:['Bill Clinton','Barack Obama','Joe Biden','George W. Bush'],a:3,e:'Bush was a Republican; the other three were Democratic presidents.'},
+ {q:'🌵 Flora: Saguaro · Joshua tree · Giant sequoia · Baobab',o:['Saguaro','Joshua tree','Giant sequoia','Baobab'],a:3,e:'The baobab is native to Africa, Madagascar and Australia; the others are iconic American species.'},
+ {q:'🌳 Flora: Sugar maple · Douglas fir · Redwood · Cherry blossom',o:['Sugar maple','Douglas fir','Redwood','Cherry blossom'],a:3,e:'Washington’s famous cherry trees came from Japan in 1912; the others are native North American trees.'},
+ {q:'🦅 Fauna: Manatee · Bald eagle · American bison · Burmese python',o:['Manatee','Bald eagle','American bison','Burmese python'],a:3,e:'The Burmese python is an invasive species in the Florida Everglades; the others are native.'},
+ {q:'🎬 Pop culture: Hollywood · Broadway · Nashville · Silicon Valley',o:['Hollywood','Broadway','Nashville','Silicon Valley'],a:3,e:'The first three are entertainment capitals (film, theatre, country music); Silicon Valley is the tech hub.'},
+ {q:'🎤 Pop culture: Elvis Presley · Bob Dylan · Taylor Swift · David Bowie',o:['Elvis Presley','Bob Dylan','Taylor Swift','David Bowie'],a:3,e:'Bowie was British; the others are American artists.'},
+ {q:'🏈 Pop culture: Super Bowl · World Series · Stanley Cup · Wimbledon',o:['Super Bowl','World Series','Stanley Cup','Wimbledon'],a:3,e:'Wimbledon is a British tennis tournament; the others are major North American league championships.'},
+ {q:'📺 Pop culture: The Simpsons · Friends · Seinfeld · Doctor Who',o:['The Simpsons','Friends','Seinfeld','Doctor Who'],a:3,e:'Doctor Who is a British series; the others are classic American TV shows.'}]},
+{id:'conn',name:'Connections',type:'conn',intro:'Sixteen words, four hidden groups of four. Select four words and press Submit. You have 4 mistakes.',
+ groups:[{n:'Mountain ranges',w:['Rockies','Appalachians','Sierra Nevada','Cascades']},{n:'Federal holidays',w:['Thanksgiving','Independence Day','Memorial Day','Juneteenth']},{n:'Mount Rushmore presidents',w:['Washington','Jefferson','Roosevelt','Lincoln']},{n:'The Great Lakes',w:['Erie','Huron','Ontario','Superior']}]},
+{id:'infer',name:'Inference & Assumptions',type:'mc',intro:'Read between the lines. Which conclusion is best supported – and which assumption lies behind each statement?',
+ qs:[
+ {q:'“Only landowning white men could vote in many states in 1790.” What does this imply about early American democracy?',o:['It was universally inclusive.','Its ideals of equality were applied selectively.','It had no elections.','It was a monarchy.'],a:1,e:'“All men are created equal” co-existed with severe exclusions.'},
+ {q:'A tourist says: “Americans all eat fast food and love guns.” Which underlying assumption is flawed?',o:['That US culture is diverse.','That a nation of 330+ million is uniform.','That food varies by region.','That opinions differ.'],a:1,e:'It is a sweeping generalisation that ignores regional and individual diversity.'},
+ {q:'“The Midwest is called America’s breadbasket.” Which assumption best explains this nickname?',o:['Its climate and flat plains suit large-scale grain farming.','It has the most bakeries.','It has the highest mountains.','It lacks farmland.'],a:0,e:'Fertile soil and flat land make the region ideal for wheat and corn.'}]},
+];
+let step=-1,state={},started=false,end=0,tick=null,finished=false,startT=0;
+const LIM=20*60;
+
+function stepsTotal(){return SECTIONS.length}
+function update(){
+ $('#pb').style.width=Math.max(0,step+1)/stepsTotal()*100+'%';
+ $('#stepLbl').textContent=step<0?'Welcome':step>=SECTIONS.length?'Results':(step+1)+'/'+stepsTotal()+' · '+SECTIONS[step].name;
+}
+function startTimer(){
+ end=Date.now()+LIM*1000;startT=Date.now();
+ tick=setInterval(()=>{
+  const r=Math.max(0,Math.round((end-Date.now())/1000));
+  $('#timer').textContent=String(Math.floor(r/60)).padStart(2,'0')+':'+String(r%60).padStart(2,'0');
+  if(r<=0){clearInterval(tick);results(true)}
+ },500);
+}
+function welcome(){
+ $('#app').innerHTML=`<div class="card"><span class="tag">C1 · C2</span><h2>Ready for a challenge?</h2>
+ <p>This extra task will test how well you can read, listen, reason and reflect – all through the topic of the United States.</p>
+ <ul><li><b>5 activities:</b> reading, listening, odd one out, connections and inference.</li><li><b>20 minutes</b> – the timer starts when you press Start.</li><li>You will see your <b>final score</b> at the end.</li></ul>
+ <button id="go">Start the challenge</button></div>`;
+ $('#go').onclick=()=>{started=true;startTimer();step=0;render()};
+ update();
+}
+function render(){
+ if(step>=SECTIONS.length)return results(false);
+ const s=SECTIONS[step];state[s.id]=state[s.id]||{};
+ let h=`<div class="card"><span class="tag">${s.name.toUpperCase()}</span><h2>${s.name}</h2><p class="mut">${s.intro}</p>`;
+ if(s.listen)h+=`<p><button id="play">▶ Play recording</button> <span class="mut" id="plays"></span></p><div id="tr"></div>`;
+ else if(s.passage)h+=`<div class="passage">${s.passage}</div>`;
+ if(s.type==='mc'){
+  s.qs.forEach((q,i)=>{h+=`<div class="q"><b>${i+1}. ${q.q}</b>`+q.o.map((o,j)=>`<button class="opt" data-i="${i}" data-j="${j}">${o}</button>`).join('')+`<div class="exp" id="e${i}"></div></div>`});
+ }else if(s.type==='conn'){
+  h+=`<div id="solved"></div><div class="grid" id="grid"></div><p class="mut" id="cmsg"></p><button id="sub" disabled>Submit</button> <button class="sec" id="shuf">Shuffle</button>`;
+ }else{
+  h+=`<p><b>${s.prompt}</b></p><textarea id="ta" placeholder="Write your reflection here…"></textarea><p class="mut" id="wc">0 words</p>`;
+ }
+ h+=`</div><div class="nav"><button class="sec" id="prev" ${step===0?'disabled':''}>← Back</button><button id="next">${step===SECTIONS.length-1?'Finish & see results':'Next →'}</button></div>`;
+ $('#app').innerHTML=h;update();window.scrollTo(0,0);
+ if(s.type==='mc')bindMC(s);
+ if(s.type==='conn')bindConn(s);
+ if(s.type==='write'){const ta=$('#ta');ta.value=state.reflect.text||'';const u=()=>{state.reflect.text=ta.value;const n=wc(ta.value);$('#wc').textContent=n+' words'};ta.oninput=u;u()}
+ if(s.listen)bindListen(s);
+ $('#prev').onclick=()=>{speechSynthesis&&speechSynthesis.cancel();step--;render()};
+ $('#next').onclick=()=>{speechSynthesis&&speechSynthesis.cancel();step++;render()};
+}
+const wc=t=>(t.trim().match(/\S+/g)||[]).length;
+function bindMC(s){
+ const st=state[s.id];
+ const paint=()=>{s.qs.forEach((q,i)=>{
+  const a=st[i];document.querySelectorAll(`.opt[data-i="${i}"]`).forEach(b=>{
+   const j=+b.dataset.j;if(a===undefined)return;b.disabled=true;
+   if(j===q.a)b.classList.add('ok');else if(j===a)b.classList.add('bad');});
+  if(a!==undefined){const e=$('#e'+i);e.style.display='block';e.textContent=(a===q.a?'✔ Correct. ':'✘ Not quite. ')+q.e}
+ })};
+ document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;if(st[i]===undefined){st[i]=+b.dataset.j;paint()}});
+ paint();
+}
+function bindListen(s){
+ const st=state.listen;st.plays=st.plays||0;
+ const info=()=>{$('#plays').textContent=`Plays used: ${st.plays}/2`};info();
+ if(!('speechSynthesis' in window)){$('#tr').innerHTML=`<div class="passage"><b>Audio not supported – read instead:</b><br>${s.passage}</div>`;$('#play').disabled=true;return}
+ $('#play').onclick=()=>{
+  if(st.plays>=2)return;st.plays++;info();
+  speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(s.passage);u.lang='en-US';u.rate=.95;speechSynthesis.speak(u);
+  if(st.plays>=2)$('#play').disabled=true;
+ };
+ if(st.plays>=2)$('#play').disabled=true;
+}
+function bindConn(s){
+ const st=state.conn;st.solved=st.solved||[];st.miss=st.miss||0;
+ if(!st.order){st.order=s.groups.flatMap(g=>g.w).sort(()=>Math.random()-.5)}
+ let sel=[];
+ const draw=()=>{
+  $('#solved').innerHTML=st.solved.map(i=>`<div class="solved"><b>${s.groups[i].n}</b><br>${s.groups[i].w.join(' · ')}</div>`).join('');
+  const done=st.solved.flatMap(i=>s.groups[i].w);
+  $('#grid').innerHTML=st.order.filter(w=>!done.includes(w)).map(w=>`<button class="tile ${sel.includes(w)?'sel':''}" data-w="${w}">${w}</button>`).join('');
+  document.querySelectorAll('.tile').forEach(b=>b.onclick=()=>{
+   if(st.miss>=4)return;const w=b.dataset.w;
+   sel=sel.includes(w)?sel.filter(x=>x!==w):(sel.length<4?[...sel,w]:sel);draw()});
+  $('#sub').disabled=sel.length!==4||st.miss>=4;
+  $('#cmsg').textContent=st.solved.length===4?'🎉 All groups found!':st.miss>=4?'No mistakes left.':`Mistakes remaining: ${4-st.miss}`;
+ };
+ $('#sub').onclick=()=>{
+  const gi=s.groups.findIndex(g=>sel.every(w=>g.w.includes(w)));
+  if(gi>=0){st.solved.push(gi);sel=[]}
+  else{st.miss++;const near=s.groups.some(g=>sel.filter(w=>g.w.includes(w)).length===3);sel=[];
+   draw();$('#cmsg').textContent=(near?'One away! ':'Not a group. ')+`Mistakes remaining: ${4-st.miss}`;return}
+  draw();
+ };
+ $('#shuf').onclick=()=>{st.order.sort(()=>Math.random()-.5);draw()};
+ draw();
+}
+function score(){
+ const rows=[];let tot=0,max=0;
+ SECTIONS.forEach(s=>{
+  const st=state[s.id]||{};let p=0,m=0;
+  if(s.type==='mc'){m=s.qs.length;s.qs.forEach((q,i)=>{if(st[i]===q.a)p++})}
+  else if(s.type==='conn'){m=4;p=(st.solved||[]).length}
+  else{m=3;const n=wc(st.text||'');p=n>=60?(n<=140?3:2):n>=30?1:0}
+  rows.push([s.name,p,m]);tot+=p;max+=m;
+ });
+ return{rows,tot,max};
+}
+function results(timeUp){
+ if(finished)return;finished=true;clearInterval(tick);speechSynthesis&&speechSynthesis.cancel();
+ const{rows,tot,max}=score();const pct=Math.round(tot/max*100);
+ const used=Math.min(LIM,Math.round((Date.now()-startT)/1000));
+ const lvl=pct>=85?'Outstanding – genuine C2 performance! 🏆':pct>=70?'Very strong – solid C1+ work. 👏':pct>=50?'Good effort – review the explanations and try again. 💪':'Keep going – this task is deliberately challenging. 📚';
+ step=SECTIONS.length;update();$('#pb').style.width='100%';
+ $('#app').innerHTML=`<div class="card"><span class="tag">RESULTS</span><h2>${timeUp?'⏰ Time is up!':'Challenge complete!'}</h2>
+ <div class="big">${tot} / ${max}</div><p style="text-align:center"><b>${pct}%</b> · Time used: ${Math.floor(used/60)} min ${used%60} s</p><p style="text-align:center">${lvl}</p>
+ <table><tr><th>Activity</th><th>Score</th></tr>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]} / ${r[2]}</td></tr>`).join('')}</table>
+ <p class="mut">The reflection is scored on length and effort (60–140 words); your teacher can assess content and language.</p>
+ <button id="again">Try again</button></div>`;
+ $('#again').onclick=()=>location.reload();
+}
+const sizes=[100,118,135,90];let si=0;
+$('#aa').onclick=()=>{si=(si+1)%sizes.length;document.documentElement.style.fontSize=sizes[si]+'%'};
+welcome();
+</script>
+</body>
+</html>
